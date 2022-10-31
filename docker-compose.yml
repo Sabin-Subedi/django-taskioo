@@ -1,0 +1,22 @@
+version: "3.0"
+
+services:
+  db:
+    image: postgres:15.0-alpine
+    restart: always
+
+    ports:
+      - "5000:5432"
+    
+    environment: 
+      - POSTGRES_DB=taskioo
+      - POSTGRES_PASSWORD=hello
+      - POSTGRES_USER=postgres
+    
+    volumes:
+      - pgdata:/var/lib/postgresql/data/:consistent
+volumes:
+  pgdata:
+    name: pgdata
+    driver: local
+    
