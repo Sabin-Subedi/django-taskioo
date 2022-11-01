@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block body %}
+<div
+  class="min-w-screen min-h-screen flex flex-col items-center justify-center"
+>
+  <header class="mb-3">
+    <h1 class="logo">Taskioo</h1>
+  </header>
+
+  <main class="max-w-md w-full">
+    <h4 class="mb-6 text-center">Sign up for your account</h4>
+    <form class="w-full mb-2" action="login.php" method="POST">
+      <div class="input_container">
+        <label for="email">Email</label>
+        <input type="email" name="email" placeholder="Enter your email ..." />
+      </div>
+
+      <div class="input_container" id="password_container">
+        <label for="email">Password</label>
+        <div class="flex gap-2">
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter your password ..."
+          />
+          <i
+            id="pwd_icon"
+            onclick="handlePwdIconClick(this)"
+            class="w-5 cursor-pointer text-gray-700"
+            data-feather="eye"
+          ></i>
+        </div>
+      </div>
+      <button class="btn btn-primary block mt-10 text-lg" type="submit">
+        Sign up
+      </button>
+    </form>
+
+    <div class="text-center">
+      <p class="text-sm font-normal text-gray-600 mt-3">
+        By continuing Email, you agree to Todoist’s Terms of Service and Privacy
+        Policy.
+      </p>
+    </div>
+
+    <div class="border-b my-5"></div>
+
+    <p class="text-sm text-center text-gray-600">
+      Alreadt have an account?
+      <a href="{% url 'login' %}" class="underline">Log in</a>
+    </p>
+  </main>
+</div>
+{% endblock body %}
