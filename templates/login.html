@@ -6,45 +6,43 @@
     <h1 class="logo">Taskioo</h1>
   </header>
 
-
   <main class="max-w-md w-full">
     <h4 class="mb-6 text-center">Login to your account</h4>
     <form class="w-full mb-2" action="" method="post">
-      {% csrf_token %}
-      
+      {% csrf_token %} 
       
       {% for field in form %}
-      <div class="fieldWrapper input_container">
-      {{ field.label_tag }}
-        
-        {% if field.field.widget.input_type == 'password'  %}
-        
-        <div class="flex gap-2">
+      <div class="field_wrapper">
+        <div class="input_container ">
+          {{ field.label_tag }} 
+
+          {% if field.field.widget.input_type == 'password' %}
+          <div class="flex items-center gap-2">
+            {{field}}
+            <i
+              id="pwd_icon"
+              onclick="handlePwdIconClick(this)"
+              class="w-5 cursor-pointer text-gray-700"
+              data-feather="eye"
+            ></i>
+     
+
+          </div>
+          {%else%} 
           {{field}}
-          <i
-            id="pwd_icon"
-            onclick="handlePwdIconClick(this)"
-            class="w-5 cursor-pointer text-gray-700"
-            data-feather="eye"
-          ></i>
-          <p>{{field.errors}}</p>
+          {% endif %}
         </div>
-        {%else%}
-        {{field}}
-        <p>{{field.errors}}</p>
-        {% endif %}
-        <div>
-       
-        </div>
-        {% if field.help_text %}
-        <p class="help">{{ field.help_text|safe }}</p>
-        {% endif %}
+        <div class="form_error">{{field.errors}}</div>
       </div>
-      {% endfor %} 
-      
-      
-   
-      <button class="btn btn-primary block mt-10 text-lg" type="submit">
+      {% endfor %}
+
+      {%if message%}
+      <p class="bg-red-200 border border-red-500 rounded-md p-3 text-red-800">
+      {{message}}
+      </p>
+      {%endif%}
+
+      <button class="btn btn-primary block mt-6 text-lg" type="submit">
         Login
       </button>
     </form>
@@ -70,5 +68,4 @@
   </main>
 </div>
 
-<script type="text/javascript" src="{% static 'main.js'%}"></script>
 {% endblock body %}

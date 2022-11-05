@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 django = "*"
 psycopg2-binary = "*"
+django-tailwind = "*"
+django-browser-reload = "*"
 
 [dev-packages]
 autopep8 = "*"

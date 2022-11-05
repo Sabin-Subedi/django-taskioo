@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block body %}
+{% extends 'base.html' %} {% load static %} {% block body %}
 <div
   class="min-w-screen min-h-screen flex flex-col items-center justify-center"
 >
@@ -7,35 +7,56 @@
   </header>
 
   <main class="max-w-md w-full">
-    <h4 class="mb-6 text-center">Sign up for your account</h4>
-    <form class="w-full mb-2" action="login.php" method="POST">
-      <div class="input_container">
-        <label for="email">Email</label>
-        <input type="email" name="email" placeholder="Enter your email ..." />
-      </div>
+    <h4 class="mb-6 text-center">Signup for your account</h4>
+    <form class="w-full mb-2" action="" method="post">
+      {% csrf_token %} 
+      
+      {% for field in form %}
+      <div class="field_wrapper">
+        <div class="input_container 
+        {% if field.errors.length > 0%}
+         dsad
+        
+        {%endif%}">
+          {{ field.label_tag }} 
 
-      <div class="input_container" id="password_container">
-        <label for="email">Password</label>
-        <div class="flex gap-2">
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password ..."
-          />
-          <i
-            id="pwd_icon"
-            onclick="handlePwdIconClick(this)"
-            class="w-5 cursor-pointer text-gray-700"
-            data-feather="eye"
-          ></i>
+          {% if field.field.widget.input_type == 'password' %}
+          <div class="flex items-center gap-2">
+            {{field}}
+            <i
+              id="pwd_icon"
+              onclick="handlePwdIconClick(this)"
+              class="w-5 cursor-pointer text-gray-700"
+              data-feather="eye"
+            ></i>
+     
+
+          </div>
+          {%else%} 
+          {{field}}
+          {% endif %}
         </div>
+        <div class="form_error">{{field.errors}}</div>
       </div>
-      <button class="btn btn-primary block mt-10 text-lg" type="submit">
-        Sign up
+      {% endfor %}
+
+      {%if message%}
+      <p class="bg-red-200 border border-red-500 rounded-md p-3 text-red-800">
+      {{message}}
+      </p>
+      {%endif%}
+
+      <button class="btn btn-primary block mt-6 text-lg" type="submit">
+        Login
       </button>
     </form>
 
     <div class="text-center">
+      <a
+        class="text-sm text-gray-500 underline"
+        href="{% url 'forgot_password' %}"
+        >Forgot Password?</a
+      >
       <p class="text-sm font-normal text-gray-600 mt-3">
         By continuing Email, you agree to Todoist’s Terms of Service and Privacy
         Policy.
@@ -45,9 +66,10 @@
     <div class="border-b my-5"></div>
 
     <p class="text-sm text-center text-gray-600">
-      Alreadt have an account?
-      <a href="{% url 'login' %}" class="underline">Log in</a>
+      Don't have an account?
+      <a href="{% url 'signup' %}" class="underline">Sign up</a>
     </p>
   </main>
 </div>
+
 {% endblock body %}
