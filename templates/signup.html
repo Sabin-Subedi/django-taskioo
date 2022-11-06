@@ -2,7 +2,7 @@
 <div
   class="min-w-screen min-h-screen flex flex-col items-center justify-center"
 >
-  <header class="mb-3">
+  <header class="mb-5">
     <h1 class="logo">Taskioo</h1>
   </header>
 
@@ -52,11 +52,7 @@
     </form>
 
     <div class="text-center">
-      <a
-        class="text-sm text-gray-500 underline"
-        href="{% url 'forgot_password' %}"
-        >Forgot Password?</a
-      >
+  
       <p class="text-sm font-normal text-gray-600 mt-3">
         By continuing Email, you agree to Todoist’s Terms of Service and Privacy
         Policy.
@@ -66,8 +62,8 @@
     <div class="border-b my-5"></div>
 
     <p class="text-sm text-center text-gray-600">
-      Don't have an account?
-      <a href="{% url 'signup' %}" class="underline">Sign up</a>
+      Already have an account?
+      <a href="{% url 'login' %}" class="underline">Log in</a>
     </p>
   </main>
 </div>

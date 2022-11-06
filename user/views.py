@@ -2,11 +2,19 @@ from email import message
 from django.shortcuts import render,redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic import CreateView, TemplateView
+
+
 from .forms import LoginForm, SignUpForm
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
+from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 # Create your views here.
 
+
+def logout_view(request):
+    logout(request)
+    return redirect(reverse_lazy("login"))
 
 def forgot_password(request):
     return render(request, 'forgot_password.html')
@@ -14,29 +22,38 @@ def forgot_password(request):
 
 class signup(CreateView):
     form_class = SignUpForm
-    template_name = "login.html"
+    template_name = "signup.html"
     http_method_names= ['post','get']
-    success_url = "/"
+    success_url = reverse_lazy('dashboard')
+    
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        
+        return super().dispatch(request, *args, **kwargs)
+        
     
     
     def post(self,request,*args,**kwargs):
         form =self.form_class(request.POST)
         if form.is_valid():
             requestParams = request.POST
-            user = authenticate(request, email=requestParams.get('email'), password=requestParams.get('email'))
-             
-            print('userr',user)
+            first_name =requestParams.get('full_name').strip().split(' ')[0]
+            last_name = ' '.join(requestParams.get('full_name').strip().split(' ')[1:]).strip()
+       
+            user = User.objects.create_user(first_name=first_name, last_name=last_name,username=requestParams.get('username'),email=requestParams.get('email'),password=requestParams.get('password'))
+
             if user is not None:
-                login(request,user=user)
+                login(request,user)
+                return redirect(self.success_url)
         
-            return render(request,self.template_name,context={"form":form,"message":"Invalid email or password"})
+            return render(request,self.template_name,context={"form":form,"message":"Something went wrong."})
         return render(request,self.template_name,context={"form":form})
     
  
 
 
-def dashboard(request):
-    return HttpResponseRedirect(redirect_to="/login")
+
 
 
 class login_view(CreateView):
@@ -45,16 +62,27 @@ class login_view(CreateView):
     http_method_names= ['post','get']
     success_url = "/"
     
+        
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('/')
+        
+        return super().dispatch(request, *args, **kwargs)
+    
     
     def post(self,request,*args,**kwargs):
         form =self.form_class(request.POST)
         if form.is_valid():
             requestParams = request.POST
-            user = authenticate(request, email=requestParams.get('email'), password=requestParams.get('email'))
-             
-            print('userr',user)
-            if user is not None:
-                login(request,user=user)
+            username = User.objects.filter(email=requestParams.get('email'))
+    
+            if username.exists():
+                user = authenticate(username=username[0].username, password=requestParams.get('password'))
+                print(user)
+
+                if user is not None:
+                    login(request,user=user)
+                    return redirect(self.success_url)
         
             return render(request,self.template_name,context={"form":form,"message":"Invalid email or password"})
         # print(self.get_context_data(**kwargs))x
@@ -63,25 +91,3 @@ class login_view(CreateView):
     
  
 
-# def login(request):
-#     form =LoginForm()
-#     context = {
-#         "form": form
-#     }
-    
-#     if request.method == "POST":
-#         form = LoginForm(request.POST)
-        
-        
-#         if form.is_valid():
-#             data = form.cleaned_data
-#             user = authenticate(request, email=data.get('email'), password=data.get('email'))
-            
-
-#             if user is not None:
-#                 login(request, user)
-#                 return redirect("home")
-#         else:
-#             print(context)
-#             return render(request, "login.html",{"form":form})
-#     return render(request, "login.html",context)
